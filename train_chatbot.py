@@ -2,6 +2,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD
+from keras.callbacks import Callback, EarlyStopping
 import random
 
 import nltk
@@ -74,6 +75,64 @@ train_x = list(training[:,0])
 train_y = list(training[:,1])
 print("Training data created")
 
+
+'''
+ADD PATIENCE TO MODEL
+'''
+
+#add callback function from keras - USING THIS ONE
+#set patience here
+callback = EarlyStopping(monitor='loss', patience=30, restore_best_weights=True)
+
+#second option
+#CUSTOM CALLBACK in order to institute patience and to keep weights of best model
+#which is defined by minimum loss
+#https://www.tensorflow.org/guide/keras/custom_callback
+
+class EarlyStoppingAtMinLoss(Callback):
+    """Stop training when the loss is at its min, i.e. the loss stops decreasing.
+
+  Arguments:
+      patience: Number of epochs to wait after min has been hit. After this
+      number of no improvement, training stops.
+  """
+
+    def __init__(self, patience=0):
+        super(EarlyStoppingAtMinLoss, self).__init__()
+        self.patience = patience
+        # best_weights to store the weights at which the minimum loss occurs.
+        self.best_weights = None
+
+    def on_train_begin(self, logs=None):
+        # The number of epoch it has waited when loss is no longer minimum.
+        self.wait = 0
+        # The epoch the training stops at.
+        self.stopped_epoch = 0
+        # Initialize the best as infinity.
+        self.best = np.Inf
+
+    def on_epoch_end(self, epoch, logs=None):
+        current = logs.get("loss")
+        if np.less(current, self.best):
+            self.best = current
+            self.wait = 0
+            # Record the best weights if current results is better (less).
+            self.best_weights = self.model.get_weights()
+        else:
+            self.wait += 1
+            if self.wait >= self.patience:
+                self.stopped_epoch = epoch
+                self.model.stop_training = True
+                print("Restoring model weights from the end of the best epoch.")
+                self.model.set_weights(self.best_weights)
+
+    def on_train_end(self, logs=None):
+        if self.stopped_epoch > 0:
+            print("Epoch %05d: early stopping" % (self.stopped_epoch + 1))
+
+
+
+
 # Create model - 3 layers. First layer 128 neurons, second layer 64 neurons and 3rd output layer contains number of neurons
 # equal to number of intents to predict output intent with softmax
 model = Sequential()
@@ -88,7 +147,15 @@ sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 #fitting and saving the model 
-hist = model.fit(np.array(train_x), np.array(train_y), epochs=200, batch_size=5, verbose=1)
-model.save('chatbot_model.h5', hist)
+hist = model.fit(
+	np.array(train_x),
+	np.array(train_y),
+	epochs=200, 
+	batch_size=5,
+	verbose=1, 
+	callbacks=[callback],)
+	#callback=[EarlyStoppingAtMinLoss(patience=30)],)
+model.save('chatbot_model_withPatience30.h5', hist)
+#model.save('chatbot_model.h5', hist)
 
 print("model created")
