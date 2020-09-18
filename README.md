@@ -6,3 +6,4 @@ TO DO:
 - decide on chatbot purpose 
 - make new branch for gui and modify
 - either modify intents.json directly or find new data to train model
+- look for json files
