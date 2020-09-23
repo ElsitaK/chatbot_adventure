@@ -1,0 +1,22 @@
+{
+    "greeting": {
+        "tag": "greeting",
+        "patterns": "Hi there",
+        "responses": "Hello, thanks for asking"
+    },
+    "goodbye": {
+        "tag": "goodbye",
+        "patterns": "Bye",
+        "responses": "See you!"
+    },
+    "thanks": {
+        "tag": "thanks",
+        "patterns": "Thanks",
+        "responses": "Happy to help!"
+    },
+    "problem": {
+        "tag": "problem",
+        "patterns": "How are you",
+        "responses": "Good to see you again "
+    }
+}
