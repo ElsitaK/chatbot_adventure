@@ -4,20 +4,20 @@ from keras.layers import Dense, Activation, Dropout
 from keras.optimizers import SGD
 from keras.callbacks import Callback, EarlyStopping
 import random
-
 import nltk
 from nltk.stem import WordNetLemmatizer
 #nltk.download('punkt')
 #nltk.download('wordnet')
-lemmatizer = WordNetLemmatizer()
 import json
 import pickle
+
+lemmatizer = WordNetLemmatizer()
 
 words=[]
 classes = []
 documents = []
 ignore_letters = ['!', '?', ',', '.']
-intents_file = open('intents.json').read()
+intents_file = open('intents_new.json').read()
 intents = json.loads(intents_file)
 
 for intent in intents['intents']:
@@ -31,7 +31,7 @@ for intent in intents['intents']:
         if intent['tag'] not in classes:
             classes.append(intent['tag'])
 print(documents)
-# lemmaztize and lower each word and remove duplicates
+# lemmatize and lower each word and remove duplicates
 words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_letters]
 words = sorted(list(set(words)))
 # sort classes
@@ -155,7 +155,8 @@ hist = model.fit(
 	verbose=1, 
 	callbacks=[callback],)
 	#callback=[EarlyStoppingAtMinLoss(patience=30)],)
-model.save('chatbot_model_withPatience30.h5', hist)
+model.save('chatbot_test_model_newJSON.h5',hist)
+#model.save('chatbot_model_withPatience30.h5', hist)
 #model.save('chatbot_model.h5', hist)
 
 print("model created")
