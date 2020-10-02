@@ -17,19 +17,26 @@ words=[]
 classes = []
 documents = []
 ignore_letters = ['!', '?', ',', '.']
-intents_file = open('intents_new.json').read()
+intents_file = open('movie.json').read()
+#keep for testing:
+#intents_file = open('intents_new.json').read()
 intents = json.loads(intents_file)
 
 for intent in intents['intents']:
-    for pattern in intent['patterns']:
-        #tokenize each word
-        word = nltk.word_tokenize(pattern)
-        words.extend(word)
-        #add documents in the corpus
-        documents.append((word, intent['tag']))
-        # add to our classes list
-        if intent['tag'] not in classes:
-            classes.append(intent['tag'])
+    #print(intent)
+    #for pattern in intent['patterns']:
+    pattern = intent['patterns']
+    #print(pattern)
+    #tokenize each word
+    word = nltk.word_tokenize(pattern)
+    words.extend(word)
+    #add documents in the corpus
+    documents.append((word, intent['tag']))
+    # add to our classes list
+    #dont need the below because all tags unique for movies.json
+    #if intent['tag'] not in classes:
+    classes.append(intent['tag'])
+
 print(documents)
 # lemmatize and lower each word and remove duplicates
 words = [lemmatizer.lemmatize(w.lower()) for w in words if w not in ignore_letters]
@@ -155,8 +162,6 @@ hist = model.fit(
 	verbose=1, 
 	callbacks=[callback],)
 	#callback=[EarlyStoppingAtMinLoss(patience=30)],)
-model.save('chatbot_test_model_newJSON.h5',hist)
-#model.save('chatbot_model_withPatience30.h5', hist)
-#model.save('chatbot_model.h5', hist)
+model.save('chatbot_model_movieJSON.h5', hist)
 
 print("model created")

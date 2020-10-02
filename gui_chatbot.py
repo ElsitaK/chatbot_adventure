@@ -9,7 +9,7 @@ import random
 lemmatizer = WordNetLemmatizer()
 
 #model = load_model('chatbot_model.h5')
-model = load_model('chatbot_test_model_newJSON.h5')
+model = load_model('chatbot_model_movieJSON.h5')
 
 #intents = json.loads(open('intents.json').read())
 intents = json.loads(open('intents_new.json').read())
@@ -58,7 +58,8 @@ def getResponse(ints, intents_json):
     list_of_intents = intents_json['intents']
     for i in list_of_intents:
         if(i['tag']== tag):
-            result = random.choice(i['responses'])
+            #result = random.choice(i['responses'])
+            result = i['responses']
             break
     return result
 

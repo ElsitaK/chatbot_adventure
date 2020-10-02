@@ -31,8 +31,8 @@ jsonFilePath = 'intents_new.json'
 # Call the make_json function 
 make_json(csvFilePath, jsonFilePath)     
 # name file paths
-csvFilePath = 'intents_new.csv'
-jsonFilePath = 'intents_new.json'
+csvFilePath = 'outFile2.csv'
+jsonFilePath = 'movie.json'
   
 # Call the make_json function 
 make_json(csvFilePath, jsonFilePath)
