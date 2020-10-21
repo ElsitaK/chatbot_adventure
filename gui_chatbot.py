@@ -5,6 +5,7 @@ import numpy as np
 from keras.models import load_model
 import json
 import random
+import pdb
 
 lemmatizer = WordNetLemmatizer()
 
@@ -12,7 +13,7 @@ lemmatizer = WordNetLemmatizer()
 model = load_model('chatbot_model_movieJSON.h5')
 
 #intents = json.loads(open('intents.json').read())
-intents = json.loads(open('intents_new.json').read())
+intents = json.loads(open('movie.json').read())
 words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
 
@@ -42,7 +43,7 @@ def bag_of_words(sentence, words, show_details=True):
 
 def predict_class(sentence):
     # filter below  threshold predictions
-    p = bag_of_words(sentence, words,show_details=False)
+    p = bag_of_words(sentence, words, show_details=True)
     res = model.predict(np.array([p]))[0]
     ERROR_THRESHOLD = 0.25
     results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
@@ -78,6 +79,7 @@ def send():
         ChatBox.config(foreground="#446665", font=("Verdana", 12 ))
     
         ints = predict_class(msg)
+        pdb.set_trace()
         res = getResponse(ints, intents)
         
         ChatBox.insert(END, "Bot: " + res + '\n\n')
