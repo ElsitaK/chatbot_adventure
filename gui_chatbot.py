@@ -5,7 +5,6 @@ import numpy as np
 from keras.models import load_model
 import json
 import random
-import pdb
 
 lemmatizer = WordNetLemmatizer()
 
@@ -43,9 +42,9 @@ def bag_of_words(sentence, words, show_details=True):
 
 def predict_class(sentence):
     # filter below  threshold predictions
-    p = bag_of_words(sentence, words, show_details=True)
+    p = bag_of_words(sentence, words, show_details=False)
     res = model.predict(np.array([p]))[0]
-    ERROR_THRESHOLD = 0.25
+    ERROR_THRESHOLD = 0.001 #adjust this so it doesn't need to go through so many values
     results = [[i,r] for i,r in enumerate(res) if r>ERROR_THRESHOLD]
     # sorting strength probability
     results.sort(key=lambda x: x[1], reverse=True)
@@ -79,7 +78,6 @@ def send():
         ChatBox.config(foreground="#446665", font=("Verdana", 12 ))
     
         ints = predict_class(msg)
-        pdb.set_trace()
         res = getResponse(ints, intents)
         
         ChatBox.insert(END, "Bot: " + res + '\n\n')
