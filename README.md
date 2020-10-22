@@ -2,8 +2,8 @@
 building a chatbot that uses a neural network
 
 Master branch is simplest model and data file. 
-Model branch has chatbot trained from movie quotes dataset (from the Cornell Movie Dialogs Corpus)
-Upcoming: New branch where the movie lines will be clustered using Kmeans prior to training.
+<br>Model branch has chatbot trained from movie quotes dataset (from the Cornell Movie Dialogs Corpus)
+<br>Upcoming: New branch where the movie lines will be clustered using Kmeans prior to training.
 
 COMPLETED: 
 
